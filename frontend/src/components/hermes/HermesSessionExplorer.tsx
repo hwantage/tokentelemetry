@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useResource } from "@/lib/api";
+import { useScrollState } from "@/lib/useScrollState";
 import {
   buildHermesSessionsPath, formatHermesProject, type HermesSessionPage,
   type HermesSessionQuery, type HermesSessionSort,
@@ -88,6 +89,9 @@ export default function HermesSessionExplorer() {
     pollMs: 15_000,
     initial: { sessions: [], pagination: { page: 1, page_size: PAGE_SIZE, total: 0, total_pages: 0 } },
   });
+
+  // Restore scroll position when data fetch is complete
+  useScrollState("key_hermes_sessions_page", !loading);
 
   const activeFilterCount = [query.project, query.source, query.model, query.search].filter(Boolean).length;
 

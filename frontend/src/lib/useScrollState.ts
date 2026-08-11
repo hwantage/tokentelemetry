@@ -40,9 +40,9 @@ export function useScrollState(key: string, isReady: boolean = true) {
   }, [key]);
 
   const saveScrollPosition = useCallback((top: number) => {
-    if (isRestoringRef.current) return;
+    if (isRestoringRef.current || !restoredRef.current) return;
     sessionStorage.setItem(`scroll_${key}`, String(top));
-  },[key]);
+  }, [key]);
 
   const ref = useCallback((node: HTMLElement | null) => {
     nodeRef.current = node;
@@ -50,7 +50,7 @@ export function useScrollState(key: string, isReady: boolean = true) {
 
   const onScroll = useCallback((e: React.UIEvent<HTMLElement>) => {
     saveScrollPosition(e.currentTarget.scrollTop);
-  },[saveScrollPosition]);
+  }, [saveScrollPosition]);
 
   useEffect(() => {
     const target = nodeRef.current ?? getPageContainer();
